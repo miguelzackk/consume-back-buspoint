@@ -30,8 +30,7 @@ async function buscarOnibus() {
             resultado.innerHTML = `❌ Erro: ${data.erro}`;
         } else {
             resultado.innerHTML = `
-                ✅ <strong>Linha:</strong> ${data.linha} <br>
-                🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
+         🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
                 🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
                 📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
             `;
