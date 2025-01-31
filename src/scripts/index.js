@@ -1,4 +1,4 @@
-const API_URL = "https://backend-buspoint.onrender.com"; // 🔹 Backend na Render
+const API_URL = "https://backend-buspoint.onrender.com";
 
 document.addEventListener("DOMContentLoaded", function () {
     document.getElementById("buscarBtn").addEventListener("click", buscarOnibus);
@@ -15,8 +15,8 @@ async function buscarOnibus() {
         return;
     }
 
-    resultado.innerHTML = "🔄 Carregando..."; // Mensagem de carregamento
-    console.log("🟢 Enviando requisição para API...");
+    resultado.innerHTML = "🔄 Carregando...";
+    console.log("Enviando requisição para API...");
 
     const url = `${API_URL}/busca?linha=${linha}&endereco=${encodeURIComponent(endereco)}&sentido=${sentido}`;
 
@@ -36,7 +36,7 @@ async function buscarOnibus() {
             `;
         }
 
-        // 🔹 Resetando os inputs após a busca
+   
         document.getElementById("linha").value = "";
         document.getElementById("endereco").value = "";
         document.getElementById("sentido").value = "";
