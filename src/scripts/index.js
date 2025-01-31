@@ -16,7 +16,9 @@ async function buscarOnibus() {
   resultado.innerHTML = "🔄 Carregando..."; // Mensagem de carregamento
   console.log("🟢 Enviando requisição para API...");
 
-  const url = `https://backend-buspoint.onrender.com/busca?linha=${linha}&endereco=${encodeURIComponent(endereco)}&sentido=${sentido}`;
+  const url = `http://localhost:3000/busca?linha=${linha}&endereco=${encodeURIComponent(
+    endereco
+  )}&sentido=${sentido}`;
 
 
   try {
