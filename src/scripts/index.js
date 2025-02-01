@@ -27,15 +27,15 @@ function initMap() {
 }
 
 async function buscarOnibus() {
-  const linha = document.getElementById("linha").value;
-  const endereco = document.getElementById("endereco").value;
-  const sentido = document.getElementById("sentido").value;
-  const resultado = document.getElementById("resultado");
+    const linha = document.getElementById("linha").value;
+    const endereco = document.getElementById("endereco").value;
+    const sentido = document.getElementById("sentido").value;
+    const resultado = document.getElementById("resultado");
 
-  if (!linha || !endereco || !sentido) {
-    resultado.innerHTML = "⚠️ Preencha todos os campos!";
-    return;
-  }
+    if (!linha || !endereco || !sentido) {
+        resultado.innerHTML = "⚠️ Preencha todos os campos!";
+        return;
+    }
 
   resultado.innerHTML = "🔄 Carregando...";
   console.log("🟢 Enviando requisição para API...");
