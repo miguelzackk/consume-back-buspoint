@@ -1,4 +1,4 @@
-const API_URL = "https://backend-buspoint.onrender.com";
+const API_URL = "http://localhost:3000";
 let map, directionsService, directionsRenderer;
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -8,8 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function carregarGoogleMaps() {
   const script = document.createElement("script");
-  script.src =
-    "https://maps.googleapis.com/maps/api/js?key=AIzaSyCaAj4Ikdtf6B-OS6zkPYRlCa4DxUl0N9k&callback=initMap";
+  script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCaAj4Ikdtf6B-OS6zkPYRlCa4DxUl0N9k&callback=initMap";
   script.async = true;
   script.defer = true;
   document.head.appendChild(script);
@@ -56,10 +55,10 @@ async function buscarOnibus() {
     }
 
     resultado.innerHTML = `
-            🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
-            🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
-            📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
-        `;
+              🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
+              🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
+              📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
+          `;
 
     atualizarMapa(data);
 
