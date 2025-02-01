@@ -1,5 +1,8 @@
 const API_URL = "https://backend-buspoint.onrender.com";
+const API_OLHO_VIVO_URL = "http://api.olhovivo.sptrans.com.br/v2.1";
 let map, directionsService, directionsRenderer;
+let isAuthenticated = false; // Flag para verificar se a autenticação foi bem-sucedida
+const token = "b0ad167fe2fefcb3ba3f0676fc1d00fb5719bd38b72fcb0e6822780cfb838828"; // Substitua com o seu token de acesso
 
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("buscarBtn").addEventListener("click", buscarOnibus);
@@ -26,7 +29,37 @@ function initMap() {
   directionsRenderer.setMap(map);
 }
 
+// Função para autenticação
+async function autenticar() {
+  const url = `${API_OLHO_VIVO_URL}/Login/Autenticar?token=${token}`;
+
+  try {
+    const response = await fetch(url, { method: 'POST' });
+    const data = await response.json();
+
+    if (data === true) {
+      console.log("✅ Autenticação bem-sucedida!");
+      isAuthenticated = true; // Define como autenticado
+    } else {
+      console.error("❌ Erro de autenticação.");
+      isAuthenticated = false;
+    }
+  } catch (error) {
+    console.error("❌ Erro ao autenticar:", error);
+    isAuthenticated = false;
+  }
+}
+
+// Função para buscar ônibus
 async function buscarOnibus() {
+  if (!isAuthenticated) {
+    console.log("🔒 Realizando autenticação...");
+    await autenticar(); // Autentica antes de fazer a busca
+    if (!isAuthenticated) {
+      return; // Se falhar a autenticação, não faz a busca
+    }
+  }
+
   const linha = document.getElementById("linha").value;
   const endereco = document.getElementById("endereco").value;
   const sentido = document.getElementById("sentido").value;
@@ -55,11 +88,9 @@ async function buscarOnibus() {
       return;
     }
 
-    resultado.innerHTML = `
-            🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
-            🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
-            📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
-        `;
+    resultado.innerHTML = `🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
+                          🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
+                          📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}`;
 
     atualizarMapa(data);
 
