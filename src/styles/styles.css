@@ -5,24 +5,22 @@ body {
   background-color: #f4f4f4;
 }
 
-input,
-button {
+input, button {
   margin: 10px;
   padding: 10px;
   font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
 }
-
-.type {
-    width: 18.6%;
-}
-
-
 
 button {
   background-color: #28a745;
   color: white;
   border: none;
   cursor: pointer;
+  transition: background 0.3s;
+  padding: 12px 20px;
+  font-weight: bold;
 }
 
 button:hover {
@@ -33,4 +31,19 @@ button:hover {
   margin-top: 20px;
   font-size: 18px;
   font-weight: bold;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  display: inline-block;
+  max-width: 80%;
+}
+
+/* 🔹 Melhorando o estilo do mapa */
+#map {
+  width: 100%;
+  height: 500px;
+  margin-top: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
