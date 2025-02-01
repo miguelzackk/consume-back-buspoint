@@ -1,3 +1,31 @@
+const API_URL = "https://backend-buspoint.onrender.com";
+let map, directionsService, directionsRenderer;
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("buscarBtn").addEventListener("click", buscarOnibus);
+  carregarGoogleMaps();
+});
+
+function carregarGoogleMaps() {
+  const script = document.createElement("script");
+  script.src =
+    "https://maps.googleapis.com/maps/api/js?key=AIzaSyCaAj4Ikdtf6B-OS6zkPYRlCa4DxUl0N9k&callback=initMap";
+  script.async = true;
+  script.defer = true;
+  document.head.appendChild(script);
+}
+
+function initMap() {
+  map = new google.maps.Map(document.getElementById("map"), {
+    center: { lat: -23.55052, lng: -46.633308 }, // Posição padrão (São Paulo)
+    zoom: 12,
+  });
+
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsRenderer.setMap(map);
+}
+
 async function buscarOnibus() {
   const linha = document.getElementById("linha").value;
   const endereco = document.getElementById("endereco").value;
@@ -5,74 +33,91 @@ async function buscarOnibus() {
   const resultado = document.getElementById("resultado");
 
   if (!linha || !endereco || !sentido) {
-<<<<<<< HEAD
     resultado.innerHTML = "⚠️ Preencha todos os campos!";
     return;
-=======
-      resultado.innerHTML = "⚠️ Preencha todos os campos!";
-      return;
->>>>>>> a0884bf72e691fe56bb8ecf3cb3850f85910186b
   }
 
   resultado.innerHTML = "🔄 Carregando...";
   console.log("🟢 Enviando requisição para API...");
 
-  const url = `${API_URL}/busca?linha=${linha}&endereco=${encodeURIComponent(endereco)}&sentido=${sentido}`;
+  const url = `${API_URL}/busca?linha=${linha}&endereco=${encodeURIComponent(
+    endereco
+  )}&sentido=${sentido}`;
 
   try {
-      const response = await fetch(url);
-      const data = await response.json();
+    const response = await fetch(url);
+    const data = await response.json();
 
-      console.log("🔵 Resposta recebida:", data);
+    console.log("🔵 Resposta recebida:", data);
 
-      if (data.erro) {
-          resultado.innerHTML = `❌ Erro: ${data.erro}`;
-          return;
-      }
+    if (data.erro) {
+      resultado.innerHTML = `❌ Erro: ${data.erro}`;
+      return;
+    }
 
-      resultado.innerHTML = `
-          ✅ <strong>Linha:</strong> ${data.linha} <br>
-          🚏 <strong>Paradas encontradas:</strong> ${data.paradas.length} <br>
-      `;
+    resultado.innerHTML = `
+            🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
+            🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
+            📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
+        `;
 
-      desenharRotaNoMapa(data.paradas);
+    atualizarMapa(data);
 
+    document.getElementById("linha").value = "";
+    document.getElementById("endereco").value = "";
+    document.getElementById("sentido").value = "";
   } catch (error) {
-      resultado.innerHTML = "❌ Erro ao buscar informações.";
-      console.error("🔴 Erro na requisição:", error);
+    resultado.innerHTML = "❌ Erro ao buscar informações.";
+    console.error("🔴 Erro na requisição:", error);
   }
 }
 
-function desenharRotaNoMapa(paradas) {
-  if (!map) return;
+function atualizarMapa(data) {
+  const onibusEndereco = data.localizacao_onibus;
+  const paradaEndereco = data.parada;
 
-  const waypoints = paradas.map(parada => ({
-      location: new google.maps.LatLng(parada.lat, parada.lng),
-      stopover: true
-  }));
-
-  if (waypoints.length < 2) {
-      console.error("Não há paradas suficientes para criar uma rota.");
+  Promise.all([
+    buscarCoordenadasPorEndereco(onibusEndereco),
+    buscarCoordenadasPorEndereco(paradaEndereco),
+  ]).then(([onibusPos, paradaPos]) => {
+    if (!onibusPos || !paradaPos) {
+      console.error("❌ Não foi possível obter as coordenadas.");
       return;
-  }
+    }
 
-  const origem = waypoints.shift().location;
-  const destino = waypoints.pop().location;
+    map.setCenter(onibusPos);
+    map.setZoom(14);
 
-  directionsService.route({
-      origin: origem,
-      destination: destino,
-      waypoints: waypoints,
-      travelMode: google.maps.TravelMode.DRIVING
-  }, (result, status) => {
-      if (status === google.maps.DirectionsStatus.OK) {
+    new google.maps.Marker({
+      position: onibusPos,
+      map,
+      title: "Ônibus",
+      icon: "https://maps.google.com/mapfiles/ms/icons/bus.png",
+    });
+
+    new google.maps.Marker({
+      position: paradaPos,
+      map,
+      title: "Parada",
+      icon: "https://maps.google.com/mapfiles/ms/icons/red-dot.png",
+    });
+
+    directionsService.route(
+      {
+        origin: onibusPos,
+        destination: paradaPos,
+        travelMode: google.maps.TravelMode.DRIVING,
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
           directionsRenderer.setDirections(result);
-      } else {
+        } else {
           console.error("❌ Erro ao calcular a rota:", status);
+        }
       }
+    );
   });
 }
-<<<<<<< HEAD
 
 async function buscarCoordenadasPorEndereco(endereco) {
   try {
@@ -92,5 +137,3 @@ async function buscarCoordenadasPorEndereco(endereco) {
     return null;
   }
 }
-=======
->>>>>>> a0884bf72e691fe56bb8ecf3cb3850f85910186b
