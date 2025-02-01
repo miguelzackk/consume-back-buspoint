@@ -27,50 +27,50 @@ function initMap() {
 }
 
 async function buscarOnibus() {
-  const linha = document.getElementById("linha").value;
-  const endereco = document.getElementById("endereco").value;
-  const sentido = document.getElementById("sentido").value;
-  const resultado = document.getElementById("resultado");
-
-  if (!linha || !endereco || !sentido) {
-    resultado.innerHTML = "⚠️ Preencha todos os campos!";
-    return;
-  }
-
-  resultado.innerHTML = "🔄 Carregando...";
-  console.log("🟢 Enviando requisição para API...");
-
-  const url = `${API_URL}/busca?linha=${linha}&endereco=${encodeURIComponent(
-    endereco
-  )}&sentido=${sentido}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    console.log("🔵 Resposta recebida:", data);
-
-    if (data.erro) {
-      resultado.innerHTML = `❌ Erro: ${data.erro}`;
+    const linha = document.getElementById("linha").value;
+    const endereco = document.getElementById("endereco").value;
+    const sentido = document.getElementById("sentido").value;
+    const resultado = document.getElementById("resultado");
+  
+    if (!linha || !endereco || !sentido) {
+      resultado.innerHTML = "⚠️ Preencha todos os campos!";
       return;
     }
-
-    resultado.innerHTML = `
-            🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
-            🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
-            📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
-        `;
-
-    atualizarMapa(data);
-
-    document.getElementById("linha").value = "";
-    document.getElementById("endereco").value = "";
-    document.getElementById("sentido").value = "";
-  } catch (error) {
-    resultado.innerHTML = "❌ Erro ao buscar informações.";
-    console.error("🔴 Erro na requisição:", error);
+  
+    resultado.innerHTML = "🔄 Carregando...";
+    console.log("🟢 Enviando requisição para API...");
+  
+    const url = `${API_URL}/busca?linha=${linha}&endereco=${encodeURIComponent(endereco)}&sentido=${sentido}`;
+  
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+  
+      console.log("🔵 Resposta recebida:", data);
+  
+      if (data.erro) {
+        resultado.innerHTML = `❌ Erro: ${data.erro}`;
+        return;
+      }
+  
+      resultado.innerHTML = `
+        🚏 <strong>Parada mais próxima:</strong> ${data.parada} <br>
+        🕐 <strong>Tempo estimado:</strong> ${data.tempo_estimado_min} min <br>
+        📍 <strong>Ônibus está em:</strong> ${data.localizacao_onibus}
+      `;
+  
+      // Chama a função do backend para mostrar a rota
+      mostrarRotaDoOnibus(linha);
+  
+      document.getElementById("linha").value = "";
+      document.getElementById("endereco").value = "";
+      document.getElementById("sentido").value = "";
+    } catch (error) {
+      resultado.innerHTML = "❌ Erro ao buscar informações.";
+      console.error("🔴 Erro na requisição:", error);
+    }
   }
-}
+  
 
 function atualizarMapa(data) {
   const onibusEndereco = data.localizacao_onibus;
