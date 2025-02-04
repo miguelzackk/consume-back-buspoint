@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function carregarGoogleMaps() {
   const script = document.createElement("script");
-  script.src = `https://maps.googleapis.com/maps/api/js?key=${GOOGLE_API_KEY}&callback=initMap`;
+  script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyCaAj4Ikdtf6B-OS6zkPYRlCa4DxUl0N9k&callback=initMap`;
   script.async = true;
   script.defer = true;
   document.head.appendChild(script);
