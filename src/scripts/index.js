@@ -94,7 +94,7 @@ async function atualizarMapa(data) {
 
 async function buscarCoordenadasPorEndereco(endereco) {
   try {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(endereco)}&key=${GOOGLE_API_KEY}`);
+    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(endereco)}&key=AIzaSyCaAj4Ikdtf6B-OS6zkPYRlCa4DxUl0N9k`);
     const data = await response.json();
     return data.results[0]?.geometry.location || null;
   } catch (error) {
